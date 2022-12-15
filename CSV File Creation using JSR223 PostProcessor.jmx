@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <TransactionController guiclass="TransactionControllerGui" testclass="TransactionController" testname="Transaction Controller" enabled="true">
+          <boolProp name="TransactionController.includeTimers">false</boolProp>
+          <boolProp name="TransactionController.parent">false</boolProp>
+        </TransactionController>
+        <hashTree>
+          <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor - .csv File Creation" enabled="true">
+            <stringProp name="cacheKey">true</stringProp>
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">import java.util.ArrayList;
+import java.util.Arrays;
+import java.io.FileWriter;
+import java.io.Writer;
+
+
+//Take &quot;C_SewingJobs_matchNr&quot; parameter into script variable(V_C_SewingJobs_matchNr)
+String V_C_SewingJobs_matchNr = vars.get(&quot;C_SewingJobs_matchNr&quot;);
+vars.put(&quot;V_C_SewingJobs_matchNr&quot;,V_C_SewingJobs_matchNr);
+
+int int_SewingJobCount = Integer.parseInt(V_C_SewingJobs_matchNr);
+
+//Take &quot;PathToSewingInJobsFile&quot; parameter into script variable(V_PathToSewingInJobsFile)
+String V_PathToSewingInJobsFile = vars.get(&quot;PathToSewingInJobsFile&quot;);
+vars.put(&quot;V_PathToSewingInJobsFile&quot;,V_PathToSewingInJobsFile);
+
+//Take &quot;PathToSewingInJobsFile&quot; parameter into script variable(V_PathToSewingInJobsFile)
+String V_P_schedule_TG1 = vars.get(&quot;P_schedule_TG1&quot;);
+vars.put(&quot;V_P_schedule_TG1&quot;,V_P_schedule_TG1);
+
+//Write the .csv file name called &quot;SewingJobsIN&quot;
+FileWriter fw_IN = new FileWriter(V_PathToSewingInJobsFile+V_P_schedule_TG1+&quot;_SewingJobsIN.csv&quot;,true);
+BufferedWriter br_IN = new BufferedWriter(fw_IN);
+
+//Write the .csv file name called &quot;SewingJobsOUT&quot;
+FileWriter fw_OUT = new FileWriter(V_PathToSewingInJobsFile+V_P_schedule_TG1+&quot;_SewingJobsOUT.csv&quot;,true);
+BufferedWriter br_OUT = new BufferedWriter(fw_OUT);
+
+for(int a = 1; a &lt;= int_SewingJobCount; a++)
+{
+	String str_a = Integer.toString(a);
+	String array_possion = &quot;C_SewingJobs_&quot; + str_a;
+	//vars.put(&quot;V_array_possion&quot;,array_possion);
+	
+	String V_array_value = vars.get(array_possion);
+	//vars.put(&quot;V_array_value&quot;,V_array_value);	
+
+	char []s=V_array_value.toCharArray();
+
+	if(s[2]==&apos;3&apos;)
+	{
+
+	br_IN.write(V_array_value);
+	br_IN.write(System.getProperty(&quot;line.separator&quot;));
+	}
+	else if(s[2]==&apos;4&apos;)
+	{
+
+	br_OUT.write(V_array_value);
+	br_OUT.write(System.getProperty(&quot;line.separator&quot;));
+	}
+}
+br_IN.close();
+fw_IN.close();
+br_OUT.close();
+fw_OUT.close();</stringProp>
+            <stringProp name="scriptLanguage">java</stringProp>
+          </JSR223PostProcessor>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
